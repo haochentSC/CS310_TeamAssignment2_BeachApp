@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "590775639362",
+    "project_id": "beachapp11",
+    "storage_bucket": "beachapp11.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:590775639362:android:77bd3ee0588d12b770bcdb",
+        "android_client_info": {
+          "package_name": "com.example.beachapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZk1Vozgc6dP3Rl5ZeBIMfqt6-OMoK2JQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
