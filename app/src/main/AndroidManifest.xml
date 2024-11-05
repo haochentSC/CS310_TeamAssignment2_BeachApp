@@ -29,6 +29,12 @@
         <activity
             android:name=".LoginActivity"
             android:exported="true" />
+        <activity
+            android:name=".DisplayBeachActivity"
+            android:exported="true" />
+        <activity
+            android:name=".ReviewListActivity"
+            android:exported="true" />
     </application>
 
 </manifest>

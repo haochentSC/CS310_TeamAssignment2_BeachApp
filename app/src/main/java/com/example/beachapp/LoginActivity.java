@@ -67,8 +67,9 @@ public class LoginActivity extends AppCompatActivity {
                         if(curUser!=null){
                             if(curUser.getPassword().equals(in_password)){
                                 Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_LONG).show();
-                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                intent.putExtra("userID", curUser.getUserID());
+                                Intent intent = new Intent(LoginActivity.this, DisplayBeachActivity.class);
+                                intent.putExtra("beachID", "beach001"); // Replace "beach001" with the actual beachID value
+                                intent.putExtra("userID", "user123");
                                 startActivity(intent);
                                 finish();
                                 return;
