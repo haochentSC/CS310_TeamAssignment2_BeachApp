@@ -10,6 +10,10 @@ import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/* WeatherAPI is static, so don't need to instantiate the class */
+/* Ex:   WeatherAPI.fetchWeather(LATITUDE, LONGITUDE);          */
+/*       double temp = WeatherAPI.getTemperature()              */
+
 public class WeatherAPI {
     private final static String API_KEY = "EQ2Mscv6d31ynkew7peprkmoTegJ5fjW";
     private static String realtimeJSON;
