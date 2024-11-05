@@ -22,6 +22,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!-- RegisterActivity declaration -->
+        <activity
+            android:name=".RegisterActivity"
+            android:exported="true" />
+
+        <activity
+            android:name=".LoginActivity"
+            android:exported="true" />
+        <activity
+            android:name=".DisplayBeachActivity"
+            android:exported="true" />
+        <activity
+            android:name=".ReviewListActivity"
+            android:exported="true" />
     </application>
 
 </manifest>
