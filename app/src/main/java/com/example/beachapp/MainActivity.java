@@ -29,22 +29,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    protected void getWeatherInfo(double latitude, double longitude) {
-        executorService = Executors.newSingleThreadExecutor();
-        executorService.execute(() -> {
-            try {
-                weatherJSON = WeatherAPI.fetchWeather(latitude, longitude); // example call
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        executorService.shutdown();
-    }
     private void addBeachDataToFirebase() {
         FirebaseDatabase firebaseDatabase;
         DatabaseReference databaseReference;
