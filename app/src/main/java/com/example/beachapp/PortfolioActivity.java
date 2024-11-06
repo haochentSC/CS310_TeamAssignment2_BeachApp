@@ -2,6 +2,8 @@ package com.example.beachapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +36,9 @@ public class PortfolioActivity extends AppCompatActivity {
     private DatabaseReference beachesRef;
     private Map<String, String> beachNamesIDPair;
     private int pc;
+    private EditText editTextReviewNumber;
+    private Button buttonDeleteReview;
+    private Button buttonGoBackToBeach;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,10 +58,49 @@ public class PortfolioActivity extends AppCompatActivity {
         textViewEmail= findViewById(R.id.textViewEmail);
         userReviewList= new ArrayList<>();
         textViewReviews= findViewById(R.id.textViewReviews);
+        editTextReviewNumber = findViewById(R.id.editTextReviewNumber);
+        buttonDeleteReview = findViewById(R.id.buttonDeleteReview);
         beachNamesIDPair = new HashMap<>();
+        buttonGoBackToBeach = findViewById(R.id.buttonGoBackToBeach);
         fetchUserData();
         fetchUserReviews();
+        buttonDeleteReview.setOnClickListener(v -> {
+            String input= editTextReviewNumber.getText().toString().trim();
+            if (input.isEmpty()) {
+                Toast.makeText(this, "Need a review number.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            int reviewNumber;
+            try {
+                reviewNumber = Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                Toast.makeText(this, "Invalid review number.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            deleteReviewByNumber(reviewNumber);
+
+        });
+        buttonGoBackToBeach.setOnClickListener(v -> {
+            Intent backIntent = new Intent(PortfolioActivity.this, DisplayBeachActivity.class);
+            backIntent.putExtra("beachID", beachID);
+            backIntent.putExtra("userID", userID);
+            startActivity(backIntent);
+        });
     }
+    private void deleteReviewByNumber(int reviewNumber) {
+        if (reviewNumber < 1 || reviewNumber > userReviewList.size()) {
+            Toast.makeText(this, "Review number out of range.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Review review = userReviewList.get(reviewNumber - 1);
+        DatabaseReference delete_reviewRef = FirebaseDatabase.getInstance().getReference("reviews").child(review.getBeachID()).child(review.getReviewID());
+        delete_reviewRef.removeValue();
+        updateBeachRatingAfterDeletion(review);
+        userReviewList.remove(review);
+        displayUserReviews();
+    }
+
     private void fetchUserData() {
         usersRef.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -151,4 +195,31 @@ public class PortfolioActivity extends AppCompatActivity {
         }
         textViewReviews.setText(allReviews);
     }
+    public void updateBeachRatingAfterDeletion(Review delReview){
+        DatabaseReference del_beachRef = beachesRef.child(delReview.getBeachID());
+        del_beachRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Beach b = snapshot.getValue(Beach.class);
+                if (b != null) {
+                    int totalRatings = b.getTotalRatings();
+                    double avgRating = b.getAvgRating();
+                    if (totalRatings > 1) {
+                        double newAvgRating = ((avgRating * totalRatings) - delReview.getRating()) / (totalRatings - 1);
+                        b.setAvgRating(newAvgRating);
+                        b.setTotalRatings(totalRatings - 1);
+                    } else {
+                        b.setAvgRating(0.0);
+                        b.setTotalRatings(0);
+                    }
+                    del_beachRef.setValue(b);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(PortfolioActivity.this, "Failed to update beach rating: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 }

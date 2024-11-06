@@ -2,9 +2,11 @@ package com.example.beachapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.beachapp.Review;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,7 +39,9 @@ public class AddReviewActivity extends AppCompatActivity {
             finish();
             return;
         }
-        buttonSubmitReview.setOnClickListener(v -> pushReview());
+        buttonSubmitReview.setOnClickListener(v -> {
+            pushReview();
+        });
     }
     private void pushReview(){
         String reviewText = editTextReviewText.getText().toString();
@@ -63,26 +67,29 @@ public class AddReviewActivity extends AppCompatActivity {
                 });
     }
     private void updateBeachRating(int newRating){
-        Beach beach= beachRef.get().getResult().getValue(Beach.class);
-        if(beach!=null){
-            int totalRatings = beach.getTotalRatings();
-            double avgRating = beach.getAvgRating();
-            double newAvgRating = ((avgRating * totalRatings) + newRating) / (totalRatings + 1);
-            beach.setAvgRating(newAvgRating);
-            beach.setTotalRatings(totalRatings + 1);
-            beachRef.setValue(beach)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            // Return to the previous activity
-                            finish();
-                        } else {
-                            Toast.makeText(AddReviewActivity.this, "Failed to update beach rating: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    });
-        }
-        else{
-            Toast.makeText(AddReviewActivity.this, "Failed to get beach data: ", Toast.LENGTH_LONG).show();
-        }
+        beachRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DataSnapshot snapshot = task.getResult();
+                Beach beach = snapshot.getValue(Beach.class);
+                    int totalRatings = beach.getTotalRatings();
+                    double avgRating = beach.getAvgRating();
+                    double newAvgRating = ((avgRating * totalRatings) + newRating) / (totalRatings + 1);
+                    beach.setAvgRating(newAvgRating);
+                    beach.setTotalRatings(totalRatings + 1);
+                    beachRef.setValue(beach).addOnCompleteListener(updateTask -> {
+                                if (updateTask.isSuccessful()) {
+                                    Intent intent = new Intent(AddReviewActivity.this, DisplayBeachActivity.class);
+                                    intent.putExtra("beachID", beachID);
+                                    intent.putExtra("userID", userID);
+                                    startActivity(intent);
+                                } else {
+                                    Toast.makeText(AddReviewActivity.this, "Failed to update beach rating: " + updateTask.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                }
+                            });
+            } else {
+                Toast.makeText(AddReviewActivity.this, "Failed to get beach data: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
 }

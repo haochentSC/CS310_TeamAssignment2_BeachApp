@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:padding="16dp">
 
-    <TextView
-        android:id="@+id/textViewUsername"
+    <LinearLayout
+        android:id="@+id/linearLayoutContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Username"
-        android:textSize="18sp"
-        android:layout_marginBottom="8dp"/>
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textViewEmail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Email"
-        android:textSize="16sp"
-        android:layout_marginBottom="16dp"/>
+        <TextView
+            android:id="@+id/textViewUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Username"
+            android:textSize="18sp"
+            android:layout_marginBottom="8dp"/>
 
-    <TextView
-        android:id="@+id/textViewReviewsTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Your Reviews"
-        android:textSize="18sp"
-        android:layout_marginBottom="8dp"/>
+        <TextView
+            android:id="@+id/textViewEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Email"
+            android:textSize="16sp"
+            android:layout_marginBottom="16dp"/>
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/textViewReviewsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Your Reviews"
+            android:textSize="18sp"
+            android:layout_marginBottom="8dp"/>
 
         <TextView
             android:id="@+id/textViewReviews"
@@ -41,7 +41,46 @@
             android:text=""
             android:textSize="14sp"
             android:textColor="@android:color/black"/>
-    </ScrollView>
 
-</LinearLayout>
+        <LinearLayout
+            android:id="@+id/linearLayoutDeleteForm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp"
+            android:gravity="center_vertical">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Enter Review Number to Delete: "
+                android:textSize="16sp"/>
+
+            <EditText
+                android:id="@+id/editTextReviewNumber"
+                android:layout_width="50dp"
+                android:layout_height="48dp"
+                android:inputType="number"
+                android:ems="2"
+                android:hint="1"
+                android:textSize="16sp"
+                android:layout_marginLeft="8dp"/>
+
+            <Button
+                android:id="@+id/buttonDeleteReview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Delete"
+                android:layout_marginLeft="16dp"
+                android:backgroundTint="#FF5252"
+                android:textColor="#FFFFFF"/>
+        </LinearLayout>
+        <Button
+            android:id="@+id/buttonGoBackToBeach"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Go back to Beach"
+            android:layout_marginTop="24dp"
+            android:textSize="16sp"/>
+    </LinearLayout>
+</ScrollView>
