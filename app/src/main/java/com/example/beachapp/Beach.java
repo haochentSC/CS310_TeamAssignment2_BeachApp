@@ -10,14 +10,12 @@ public class Beach {
     private double latitude;
     private double longitude;
     private String photoUrl;
-    private List<String> reviewIDList;
     private List<String> activityTagsIDList;
     private double avgRating;
     private int totalRatings;
 
     // Default constructor
     public Beach() {
-        this.reviewIDList = new ArrayList<>();
         this.activityTagsIDList = new ArrayList<>();
         this.avgRating = 0.0;
         this.totalRatings = 0;
@@ -65,10 +63,6 @@ public class Beach {
         return totalRatings;
     }
 
-    public List<String> getReviewIDList() {
-        return reviewIDList;
-    }
-
     public List<String> getActivityTagsIDList() {
         return activityTagsIDList;
     }
@@ -105,34 +99,8 @@ public class Beach {
         this.totalRatings = totalRatings;
     }
 
-    public void setReviewIDList(List<String> reviewIDList) {
-        this.reviewIDList = reviewIDList;
-    }
-
     public void setActivityTagsIDList(List<String> activityTagsIDList) {
         this.activityTagsIDList = activityTagsIDList;
-    }
-
-    public void addReviewID(String reviewID) {
-        if (reviewIDList == null) {
-            reviewIDList = new ArrayList<>();
-        }
-        reviewIDList.add(reviewID);
-    }
-
-    public void removeReviewID(String reviewID) {
-        if (reviewIDList != null) {
-            reviewIDList.remove(reviewID);
-        }
-    }
-
-    public void updateAvgRating(int rating) {
-        totalRatings += rating;
-        if (reviewIDList != null && !reviewIDList.isEmpty()) {
-            avgRating = (double) totalRatings / reviewIDList.size();
-        } else {
-            avgRating = 0.0;
-        }
     }
 
     public void addActivityTagID(String activityTagID) {

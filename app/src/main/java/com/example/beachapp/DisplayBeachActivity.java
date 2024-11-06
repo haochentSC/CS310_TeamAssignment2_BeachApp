@@ -21,7 +21,7 @@ public class DisplayBeachActivity extends AppCompatActivity {
     private TextView textViewBeachName;
     private TextView textViewAccessHours;
     private Button buttonRating;
-
+    private Button buttonPortfolio;
     private String beachID;
     private String userID;
 
@@ -35,6 +35,7 @@ public class DisplayBeachActivity extends AppCompatActivity {
         textViewBeachName = findViewById(R.id.textViewBeachName);
         textViewAccessHours = findViewById(R.id.textViewAccessHours);
         buttonRating = findViewById(R.id.buttonRating);
+        buttonPortfolio = findViewById(R.id.buttonPortfolio);
         Intent intent=getIntent();
         if (intent != null) {
             beachID = intent.getStringExtra("beachID");
@@ -46,10 +47,16 @@ public class DisplayBeachActivity extends AppCompatActivity {
         fetchBeachData();
 
         buttonRating.setOnClickListener(v -> {
-            Intent reviewIntent = new Intent(DisplayBeachActivity.this, ReviewListActivity.class);
+            Intent reviewIntent = new Intent(DisplayBeachActivity.this, ReviewActivity.class);
             reviewIntent.putExtra("beachID", beachID);
             reviewIntent.putExtra("userID", userID);
             startActivity(reviewIntent);
+        });
+        buttonPortfolio.setOnClickListener(v -> {
+            Intent intentPortfolio = new Intent(DisplayBeachActivity.this, PortfolioActivity.class);
+            intentPortfolio.putExtra("beachID", beachID);
+            intentPortfolio.putExtra("userID", userID);
+            startActivity(intentPortfolio);
         });
     }
     private void fetchBeachData() {

@@ -33,8 +33,13 @@
             android:name=".DisplayBeachActivity"
             android:exported="true" />
         <activity
-            android:name=".ReviewListActivity"
+            android:name=".ReviewActivity"
+            android:exported="true" />
+        <activity
+            android:name=".AddReviewActivity"
+            android:exported="true" />
+        <activity
+            android:name=".PortfolioActivity"
             android:exported="true" />
     </application>
-
 </manifest>

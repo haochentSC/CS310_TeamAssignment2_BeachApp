@@ -68,8 +68,8 @@ public class LoginActivity extends AppCompatActivity {
                             if(curUser.getPassword().equals(in_password)){
                                 Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_LONG).show();
                                 Intent intent = new Intent(LoginActivity.this, DisplayBeachActivity.class);
-                                intent.putExtra("beachID", "beach001"); // Replace "beach001" with the actual beachID value
-                                intent.putExtra("userID", "user123");
+                                intent.putExtra("beachID", "beach001"); // temporaray solution, login should jumps to basic layout(Map)
+                                intent.putExtra("userID", curUser.getUserID());
                                 startActivity(intent);
                                 finish();
                                 return;
