@@ -21,13 +21,13 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private UiSettings mUiSettings;
     private ActivityMapsBinding binding;
-
     private Marker SM;
     private Marker MB;
     private Marker AB;
@@ -103,18 +103,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng huntington = new LatLng(33.65953, -117.99984);
         LatLng newport = new LatLng(33.60493, -117.87487);
 
-        SM = mMap.addMarker(new MarkerOptions().position(santamonica).title("Santa Monica"));
+        SM = mMap.addMarker(new MarkerOptions().position(santamonica).title("Santa Monica Beach"));
+        SM.setTag("beach001");
         MB = mMap.addMarker(new MarkerOptions().position(manhattan).title("Manhattan Beach"));
+        MB.setTag("beach002");
         AB = mMap.addMarker(new MarkerOptions().position(alamitos).title("Alamitos Beach"));
-        HB = mMap.addMarker(new MarkerOptions().position(huntington).title("Huntington Beach"));
+        AB.setTag("beach003");
+        HB =mMap.addMarker(new MarkerOptions().position(huntington).title("Huntington Beach"));
+        HB.setTag("beach004");
         NB = mMap.addMarker(new MarkerOptions().position(newport).title("Newport Beach"));
+        NB.setTag("beach005");
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(33.8, -118.19), 9.6f));
 
 
         Spinner markerSpinner = findViewById(R.id.markerSpinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, new String[] {
-                "Boardwalk", "Cafes", "Water Slides", "Museum", "Boating"
+                "Santa Monica Beach",
+                "Manhattan Beach",
+                "Alamitos Beach",
+                "Huntington Beach",
+                "Newport Beach"
         });
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         markerSpinner.setAdapter(adapter);
@@ -124,22 +133,45 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 // Move camera to the selected marker
+                Marker selectedMarker = null;
+                LatLng selectedLocation = null;
+                String title = "";
+                String selectedBeachID = "";
                 switch (position) {
-                    case 0: // Santa Monica
-                        moveCameraToMarker(SM, santamonica, "Santa Monica");
+                    case 0: // Santa Monica Beach
+                        selectedMarker = SM;
+                        selectedLocation = santamonica;
+                        title = "Santa Monica Beach";
+                        selectedBeachID = "beach001";
                         break;
                     case 1: // Manhattan Beach
-                        moveCameraToMarker(MB, manhattan, "Manhattan Beach");
+                        selectedMarker = MB;
+                        selectedLocation = manhattan;
+                        title = "Manhattan Beach";
+                        selectedBeachID = "beach002";
                         break;
                     case 2: // Alamitos Beach
-                        moveCameraToMarker(AB, alamitos, "Alamitos Beach");
+                        selectedMarker = AB;
+                        selectedLocation = alamitos;
+                        title = "Alamitos Beach";
+                        selectedBeachID = "beach003";
                         break;
                     case 3: // Huntington Beach
-                        moveCameraToMarker(HB, huntington, "Huntington Beach");
+                        selectedMarker = HB;
+                        selectedLocation = huntington;
+                        title = "Huntington Beach";
+                        selectedBeachID = "beach004";
                         break;
                     case 4: // Newport Beach
-                        moveCameraToMarker(NB, newport, "Newport Beach");
+                        selectedMarker = NB;
+                        selectedLocation = newport;
+                        title = "Newport Beach";
+                        selectedBeachID = "beach005";
                         break;
+                }
+                if (selectedMarker != null && selectedLocation != null) {
+                    moveCameraToMarker(selectedMarker, selectedLocation, title);
+                    Toast.makeText(MapsActivity.this, "BeachID: " + selectedBeachID, Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -151,14 +183,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         mMap.setOnInfoWindowClickListener(marker -> {
-            String beachID;
             String userID;
+            String selectedBeachID = (String) marker.getTag();
             Intent intent=getIntent();
             if (intent != null) {
-                beachID = intent.getStringExtra("beachID");
                 userID = intent.getStringExtra("userID");
                 Intent intent2 = new Intent(MapsActivity.this, DisplayBeachActivity.class);
-                intent2.putExtra("beachID", beachID);
+                intent2.putExtra("beachID", selectedBeachID);
                 intent2.putExtra("userID", userID);
                 startActivity(intent2);
             }

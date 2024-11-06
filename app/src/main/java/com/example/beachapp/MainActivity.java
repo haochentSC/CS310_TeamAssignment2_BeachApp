@@ -14,6 +14,8 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -27,8 +29,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
        // addBeachDataToFirebase();
-        //addReviewDataToFirebase("beach001");
-        //updateBeachRating("beach001",5,4);
         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(intent);
     }
@@ -37,99 +37,98 @@ public class MainActivity extends AppCompatActivity {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference();
 
-        // Create a hardcoded Beach object
-        Beach beach = new Beach(
+        // List to hold all Beach objects
+        List<Beach> beaches = new ArrayList<>();
+
+        // 1. Santa Monica Beach
+        Beach santamonica = new Beach(
                 "beach001",               // beachID
                 "Santa Monica Beach",     // name
                 "8 AM to 9 PM",           // accessHours
-                34.0195,                  // latitude
-                -118.4912                 // longitude
+                34.01943,                 // latitude
+                -118.48968                // longitude
         );
-        beach.setPhotoUrl("https://example.com/santamonica.jpg");  // Sample photo URL
-        beach.setAvgRating(0.0);  // Initial average rating
-        beach.setTotalRatings(0); // Initial total ratings
+        santamonica.setPhotoUrl("https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Santa_Monica_Pier_July_2019.jpg/800px-Santa_Monica_Pier_July_2019.jpg"); // Replace with actual URL
+        santamonica.setAvgRating(0.0);  // Initial average rating
+        santamonica.setTotalRatings(0); // Initial total ratings
+        santamonica.addActivityTagID("surfing");
+        santamonica.addActivityTagID("swimming");
+        beaches.add(santamonica);
 
-        // Adding a few activity tags for testing purposes
-        beach.addActivityTagID("surfing");
-        beach.addActivityTagID("swimming");
-
-        // Push the Beach object to Firebase
-        databaseReference.child("beaches").child(beach.getBeachID()).setValue(beach)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(getApplicationContext(), "Beach added for testing", Toast.LENGTH_SHORT).show();
-
-                        // Now add two Review objects
-                        addReviewDataToFirebase(beach.getBeachID());
-                    } else {
-                        Toast.makeText(getApplicationContext(), "Failed to add beach: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                });
-    }
-
-    private void addReviewDataToFirebase(String beachID) {
-        DatabaseReference reviewsRef = FirebaseDatabase.getInstance().getReference("reviews").child(beachID);
-
-        // Create two hardcoded Review objects
-        Review review1 = new Review(
-                "review001",
-                "user001",   // Replace with actual user IDs if available
-                beachID,
-                5,
-                "Amazing beach with beautiful sunsets!",
-                null // No pictures for this review
+        // 2. Manhattan Beach
+        Beach manhattan = new Beach(
+                "beach002",               // beachID
+                "Manhattan Beach",        // name
+                "8 AM to 9 PM",           // accessHours
+                33.88477,                 // latitude
+                -118.41103                // longitude
         );
+        manhattan.setPhotoUrl("https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Manhattan_Beach_Pier_%28cropped%29.jpg/800px-Manhattan_Beach_Pier_%28cropped%29.jpg"); // Replace with actual URL
+        manhattan.setAvgRating(0.0);
+        manhattan.setTotalRatings(0);
+        manhattan.addActivityTagID("surfing");
+        manhattan.addActivityTagID("sunbathing");
+        beaches.add(manhattan);
 
-        Review review2 = new Review(
-                "review002",
-                "user002",   // Replace with actual user IDs if available
-                beachID,
-                4,
-                "Great place to relax and enjoy the ocean.",
-                null // No pictures for this review
+        // 3. Alamitos Beach
+        Beach alamitos = new Beach(
+                "beach003",               // beachID
+                "Alamitos Beach",         // name
+                "8 AM to 9 PM",           // accessHours
+                33.763,                   // latitude
+                -118.1749                 // longitude
         );
+        alamitos.setPhotoUrl("https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Alamitos_Beach.JPG/800px-Alamitos_Beach.JPG"); // Replace with actual URL
+        alamitos.setAvgRating(0.0);
+        alamitos.setTotalRatings(0);
+        alamitos.addActivityTagID("swimming");
+        alamitos.addActivityTagID("sunbathing");
+        beaches.add(alamitos);
 
-        // Push the first review to Firebase
-        reviewsRef.child(review1.getReviewID()).setValue(review1)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(getApplicationContext(), "Review 1 added for testing", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(getApplicationContext(), "Failed to add review 1: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                });
+        // 4. Huntington Beach
+        Beach huntington = new Beach(
+                "beach004",               // beachID
+                "Huntington Beach",       // name
+                "8 AM to 10 PM",          // accessHours
+                33.65953,                 // latitude
+                -117.99984                // longitude
+        );
+        huntington.setPhotoUrl("https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Huntington_Beach.jpg/800px-Huntington_Beach.jpg"); // Replace with actual URL
+        huntington.setAvgRating(0.0);
+        huntington.setTotalRatings(0);
+        huntington.addActivityTagID("surfing");
+        huntington.addActivityTagID("sunbathing");
+        beaches.add(huntington);
 
-        // Push the second review to Firebase
-        reviewsRef.child(review2.getReviewID()).setValue(review2)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(getApplicationContext(), "Review 2 added for testing", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(getApplicationContext(), "Failed to add review 2: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                });
+        // 5. Newport Beach
+        Beach newport = new Beach(
+                "beach005",               // beachID
+                "Newport Beach",          // name
+                "8 AM to 9 PM",           // accessHours
+                33.60493,                 // latitude
+                -117.87487                // longitude
+        );
+        newport.setPhotoUrl("https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Newport_Beach.JPG/800px-Newport_Beach.JPG"); // Replace with actual URL
+        newport.setAvgRating(0.0);
+        newport.setTotalRatings(0);
+        newport.addActivityTagID("yachting");
+        newport.addActivityTagID("sunbathing");
+        beaches.add(newport);
 
-        // Update the beach's average rating and total ratings
-        updateBeachRating(beachID, review1.getRating(), review2.getRating());
-    }
+        // Iterate through the list and add each beach to Firebase
+        for (Beach beach : beaches) {
+            databaseReference.child("beaches").child(beach.getBeachID()).setValue(beach)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getApplicationContext(), beach.getName() + " added successfully", Toast.LENGTH_SHORT).show();
 
-    private void updateBeachRating(String beachID, int rating1, int rating2) {
-        DatabaseReference beachRef = FirebaseDatabase.getInstance().getReference("beaches").child(beachID);
-
-        // Calculate new average rating
-        int totalRatings = 2;
-        double avgRating = (double) (rating1 + rating2) / totalRatings;
-
-        // Update the beach object
-        beachRef.child("avgRating").setValue(avgRating);
-        beachRef.child("totalRatings").setValue(totalRatings)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(getApplicationContext(), "Beach rating updated", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(getApplicationContext(), "Failed to update beach rating: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                });
+                            // Optionally, add reviews or other related data here
+                            // addReviewDataToFirebase(beach.getBeachID());
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Failed to add " + beach.getName() + ": " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    });
+        }
     }
 
 }

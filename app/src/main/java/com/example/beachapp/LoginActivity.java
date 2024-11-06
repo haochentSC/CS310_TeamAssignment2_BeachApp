@@ -48,8 +48,8 @@ public class LoginActivity extends AppCompatActivity {
         registerJump_button.setOnClickListener(view->registerJump());
     }
     private void loginUser() {
-         in_email    = edtEmail.getText().toString().trim();
-         in_password = edtPassword.getText().toString().trim();
+        in_email= edtEmail.getText().toString().trim();
+        in_password= edtPassword.getText().toString().trim();
         if(in_email.isEmpty()){
             Toast.makeText(getApplicationContext(), "Please Enter Email", Toast.LENGTH_SHORT).show();
             return;
@@ -68,8 +68,7 @@ public class LoginActivity extends AppCompatActivity {
                             if(curUser.getPassword().equals(in_password)){
                                 Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_LONG).show();
                                 Intent intent = new Intent(LoginActivity.this, MapsActivity.class);
-                                intent.putExtra("beachID", "beach001"); // temporaray solution, login should jumps to basic layout(Map)
-                                intent.putExtra("userID", curUser.getUserID());
+                                intent.putExtra("userID",curUser.getUserID());
                                 startActivity(intent);
                                 finish();
                                 return;
@@ -88,13 +87,13 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(LoginActivity.this, "Database error: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(LoginActivity.this,"Database error: "+error.getMessage(),Toast.LENGTH_LONG).show();
             }
         });
 
         }
         public void registerJump(){
-            Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+            Intent intent=new Intent(LoginActivity.this,RegisterActivity.class);
             startActivity(intent);
         }
 }
