@@ -158,8 +158,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 beachID = intent.getStringExtra("beachID");
                 userID = intent.getStringExtra("userID");
                 Intent intent2 = new Intent(MapsActivity.this, DisplayBeachActivity.class);
-                intent2.putExtra("BeachID", beachID);
-                intent2.putExtra("UserID", userID);
+                intent2.putExtra("beachID", beachID);
+                intent2.putExtra("userID", userID);
                 startActivity(intent2);
             }
         });

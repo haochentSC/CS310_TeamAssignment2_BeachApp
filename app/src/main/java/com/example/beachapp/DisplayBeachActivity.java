@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -69,11 +70,8 @@ public class DisplayBeachActivity extends AppCompatActivity {
                     Toast.makeText(DisplayBeachActivity.this, "Beach found"+ beach.getBeachID(), Toast.LENGTH_LONG).show();
                     textViewBeachName.setText(beach.getName());
                     textViewAccessHours.setText("Access Hours: " + beach.getAccessHours());
-                    /*
-                    Glide.with(DisplayBeachActivity.this)
-                            .load(R.drawable.placeholder_image)
-                            .into(imageViewBeachPhoto);
-                     */
+
+
                     buttonRating.setText(String.format("Rating: %.1f ★", beach.getAvgRating()));
                 }
                 else{
