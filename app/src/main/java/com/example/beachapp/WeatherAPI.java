@@ -71,6 +71,7 @@ public class WeatherAPI {
         else {
             urlParams += "?location=" + latitude + ", " + longitude;
             if(infoType.equals("forecast")) {
+                // grab every hour change
                 urlParams += "&timesteps=1h";
             }
             urlParams += "&apikey=" + API_KEY;
