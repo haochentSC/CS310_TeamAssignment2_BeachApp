@@ -30,6 +30,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -44,5 +48,8 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation("com.google.firebase:firebase-database:21.0.0")
+    implementation("com.google.android.gms:play-services-maps:17.0.1")  // Add this line for Maps
+    implementation("com.google.android.gms:play-services-location:17.0.0") // For location services (if using)
+    implementation("com.google.android.material:material:1.2.0") // Optional, for UI components like Snackbar, etc.
 }
 

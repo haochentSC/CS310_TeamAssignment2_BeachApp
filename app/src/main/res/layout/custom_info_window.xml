@@ -30,6 +30,8 @@
             android:textColor="@android:color/white"
             android:background="#8A4D8D"
             android:textSize="14dp"
+            android:clickable="true"
+            android:focusable="true"
             android:layout_gravity="center_horizontal"
             android:padding = "8dp"/>
     </LinearLayout>

@@ -2,6 +2,7 @@ package com.example.beachapp;
 
 import androidx.fragment.app.FragmentActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -10,7 +11,6 @@ import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -30,6 +30,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private Marker SM;
     private Marker MB;
+    private Marker AB;
     private Marker HB;
     private Marker NB;
 
@@ -62,6 +63,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             Button seeMoreButton = view.findViewById(R.id.redirect);
             seeMoreButton.setText("See More");
+
         }
     }
 
@@ -97,11 +99,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Define locations with custom titles
         LatLng santamonica = new LatLng(34.01943, -118.48968);
         LatLng manhattan = new LatLng(33.88477, -118.41103);
+        LatLng alamitos = new LatLng(33.763, -118.1749);
         LatLng huntington = new LatLng(33.65953, -117.99984);
         LatLng newport = new LatLng(33.60493, -117.87487);
 
         SM = mMap.addMarker(new MarkerOptions().position(santamonica).title("Santa Monica"));
         MB = mMap.addMarker(new MarkerOptions().position(manhattan).title("Manhattan Beach"));
+        AB = mMap.addMarker(new MarkerOptions().position(alamitos).title("Alamitos Beach"));
         HB = mMap.addMarker(new MarkerOptions().position(huntington).title("Huntington Beach"));
         NB = mMap.addMarker(new MarkerOptions().position(newport).title("Newport Beach"));
 
@@ -110,7 +114,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         Spinner markerSpinner = findViewById(R.id.markerSpinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, new String[] {
-                "Santa Monica", "Manhattan Beach", "Huntington Beach", "Newport Beach"
+                "Boardwalk", "Cafes", "Water Slides", "Museum", "Boating"
         });
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         markerSpinner.setAdapter(adapter);
@@ -127,10 +131,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     case 1: // Manhattan Beach
                         moveCameraToMarker(MB, manhattan, "Manhattan Beach");
                         break;
-                    case 2: // Huntington Beach
+                    case 2: // Alamitos Beach
+                        moveCameraToMarker(AB, alamitos, "Alamitos Beach");
+                        break;
+                    case 3: // Huntington Beach
                         moveCameraToMarker(HB, huntington, "Huntington Beach");
                         break;
-                    case 3: // Newport Beach
+                    case 4: // Newport Beach
                         moveCameraToMarker(NB, newport, "Newport Beach");
                         break;
                 }
@@ -143,9 +150,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
 
 
-
         mMap.setOnInfoWindowClickListener(marker -> {
-            //Redirect
+            String beachID;
+            String userID;
+            Intent intent=getIntent();
+            if (intent != null) {
+                beachID = intent.getStringExtra("beachID");
+                userID = intent.getStringExtra("userID");
+                Intent intent2 = new Intent(MapsActivity.this, DisplayBeachActivity.class);
+                intent2.putExtra("BeachID", beachID);
+                intent2.putExtra("UserID", userID);
+                startActivity(intent2);
+            }
         });
     }
 }
