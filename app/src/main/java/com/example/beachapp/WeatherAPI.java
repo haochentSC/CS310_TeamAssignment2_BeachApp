@@ -64,7 +64,6 @@ public class WeatherAPI {
             response.append(inputLine);
         }
         in.close();
-        System.out.println("Response for " + infoType + ": " + response);
         return response.toString();
     }
 

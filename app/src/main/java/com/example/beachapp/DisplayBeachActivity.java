@@ -101,9 +101,6 @@ public class DisplayBeachActivity extends AppCompatActivity implements WeatherAP
 
     @Override
     public void onWeatherDataFetched(double temperature, double windSpeed, double waveHeight, ArrayList<Double> forecastTemps) {
-        for(int j = 0; j < forecastTemps.size(); j++) {
-            System.out.println(forecastTemps.get(j));
-        }
         textViewWeatherTemperature.setText("Temperature: " + temperature + "°C");
         textViewWeatherWindSpeed.setText("Wind speed: " + windSpeed + " mph");
         textViewWaveHeight.setText("Max wave height: " + waveHeight + " meters");
