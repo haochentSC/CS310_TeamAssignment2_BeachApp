@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,14 +19,22 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class DisplayBeachActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+
+public class DisplayBeachActivity extends AppCompatActivity implements WeatherAPI.WeatherCallback {
     private ImageView imageViewBeachPhoto;
     private TextView textViewBeachName;
     private TextView textViewAccessHours;
+    private TextView textViewWeatherTemperature;
+    private TextView textViewWeatherWindSpeed;
+    private TextView textViewWaveHeight;
+    private TableLayout forecastTable;
     private Button buttonRating;
     private Button buttonPortfolio;
     private String beachID;
     private String userID;
+    private ExecutorService executorService;
 
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference_beach;
@@ -35,6 +45,10 @@ public class DisplayBeachActivity extends AppCompatActivity {
         imageViewBeachPhoto = findViewById(R.id.imageViewBeachPhoto);
         textViewBeachName = findViewById(R.id.textViewBeachName);
         textViewAccessHours = findViewById(R.id.textViewAccessHours);
+        textViewWeatherTemperature = findViewById(R.id.weatherTemperature);
+        textViewWeatherWindSpeed = findViewById(R.id.weatherWindSpeed);
+        textViewWaveHeight = findViewById(R.id.waveHeight);
+        forecastTable = findViewById(R.id.forecastTable);
         buttonRating = findViewById(R.id.buttonRating);
         buttonPortfolio = findViewById(R.id.buttonPortfolio);
         Intent intent=getIntent();
@@ -70,8 +84,7 @@ public class DisplayBeachActivity extends AppCompatActivity {
                     Toast.makeText(DisplayBeachActivity.this, "Beach found"+ beach.getBeachID(), Toast.LENGTH_LONG).show();
                     textViewBeachName.setText(beach.getName());
                     textViewAccessHours.setText("Access Hours: " + beach.getAccessHours());
-
-
+                    WeatherAPI.fetchWeather(beach.getLatitude(), beach.getLongitude(), DisplayBeachActivity.this);
                     buttonRating.setText(String.format("Rating: %.1f ★", beach.getAvgRating()));
                 }
                 else{
@@ -84,5 +97,22 @@ public class DisplayBeachActivity extends AppCompatActivity {
                 textViewBeachName.setText("Error loading beach data");
             }
         });
+    }
+
+    @Override
+    public void onWeatherDataFetched(double temperature, double windSpeed, double waveHeight, ArrayList<Double> forecastTemps) {
+        for(int j = 0; j < forecastTemps.size(); j++) {
+            System.out.println(forecastTemps.get(j));
+        }
+        textViewWeatherTemperature.setText("Temperature: " + temperature + "°C");
+        textViewWeatherWindSpeed.setText("Wind speed: " + windSpeed + " mph");
+        textViewWaveHeight.setText("Max wave height: " + waveHeight + " meters");
+
+        // Provide a max of 8 successive hourly updates to temperature
+        TableRow row = (TableRow) forecastTable.getChildAt(0);
+        for (int i = 0; i < 8; i++) {
+            TextView cell = (TextView)row.getChildAt(i);
+            cell.setText(String.valueOf(forecastTemps.get(i)));
+        }
     }
 }

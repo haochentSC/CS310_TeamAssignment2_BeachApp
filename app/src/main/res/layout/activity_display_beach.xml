@@ -12,7 +12,7 @@
         <ImageView
             android:id="@+id/imageViewBeachPhoto"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="150dp"
             android:scaleType="centerCrop" />
 
         <LinearLayout
@@ -41,6 +41,14 @@
                 android:text="Rating: 0.0 ★" />
         </LinearLayout>
 
+        <Button
+            android:id="@+id/buttonPortfolio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Go to Portfolio"
+            android:layout_margin="16dp"
+            android:textSize="18sp" />
+
         <TextView
             android:id="@+id/textViewAccessHours"
             android:layout_width="match_parent"
@@ -49,12 +57,67 @@
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:text="Access Hours: " />
-        <Button
-            android:id="@+id/buttonPortfolio"
-            android:layout_width="match_parent"
+
+        <TextView
+            android:id="@+id/weatherTemperature"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Go to Portfolio"
-            android:layout_margin="16dp"
-            android:textSize="18sp" />
+            android:textSize="16sp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"/>
+
+        <TextView
+            android:id="@+id/weatherWindSpeed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"/>
+
+        <TextView
+            android:id="@+id/waveHeight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/tableTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hourly Forecast Temperatures (in °C)"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:layout_marginTop="16dp"
+                android:layout_gravity="center"/>
+            <TableLayout
+                android:id="@+id/forecastTable"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:stretchColumns="*"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/border">
+
+                <TableRow android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView android:id="@+id/cell1" android:layout_margin="4dp"/>
+                    <TextView android:id="@+id/cell2" android:layout_margin="4dp"/>
+                    <TextView android:id="@+id/cell3" android:layout_margin="4dp"/>
+                    <TextView android:id="@+id/cell4" android:layout_margin="4dp"/>
+                    <TextView android:id="@+id/cell5" android:layout_margin="4dp"/>
+                    <TextView android:id="@+id/cell6" android:layout_margin="4dp"/>
+                    <TextView android:id="@+id/cell7" android:layout_margin="4dp"/>
+                    <TextView android:id="@+id/cell8" android:layout_margin="4dp"/>
+                </TableRow>
+            </TableLayout>
+        </LinearLayout>
+
     </LinearLayout>
 </ScrollView>

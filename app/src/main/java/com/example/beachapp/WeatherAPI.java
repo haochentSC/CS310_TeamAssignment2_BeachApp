@@ -1,5 +1,7 @@
 package com.example.beachapp;
 
+import com.google.firebase.database.ValueEventListener;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -15,7 +17,7 @@ import java.util.regex.Pattern;
 /*       double temp = WeatherAPI.getTemperature()              */
 
 public class WeatherAPI {
-    private final static String API_KEY = "EQ2Mscv6d31ynkew7peprkmoTegJ5fjW";
+    private final static String API_KEY = "jXC2DReCT7GZAZCmebno6qGLsgCRd1EK";
     private static String realtimeJSON;
     private static String forecastJSON;
     private static String waveJSON;
@@ -24,7 +26,11 @@ public class WeatherAPI {
     private static ArrayList<Double> forecastTemperatureArray;
     private static double waveHeight;
 
-    public static void fetchWeather(double latitude, double longitude) {
+    public interface WeatherCallback {
+        void onWeatherDataFetched(double temperature, double windSpeed, double waveHeight, ArrayList<Double> forecastTemps);
+    }
+
+    public static void fetchWeather(double latitude, double longitude, WeatherCallback weatherCallback) {
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         executorService.execute(() -> {
             try {
@@ -32,16 +38,23 @@ public class WeatherAPI {
                 forecastJSON = WeatherAPI.fetchWeatherHelper("forecast", latitude, longitude);
                 waveJSON = WeatherAPI.fetchWeatherHelper("marine", latitude, longitude);
                 parseJSON();
+
+                // Run callback on the main UI thread to update the UI
+                if (weatherCallback != null) {
+                    new android.os.Handler(android.os.Looper.getMainLooper()).post(() ->
+                            weatherCallback.onWeatherDataFetched(temperature, windSpeed, waveHeight, forecastTemperatureArray)
+                    );
+                }
             } catch (Exception e) {
                 e.printStackTrace();
+            } finally {
+                executorService.shutdown();
             }
         });
-        executorService.shutdown();
     }
 
     private static String fetchWeatherHelper(String infoType, double latitude, double longitude) throws Exception {
         URL url = new URL(constructURL(infoType, latitude, longitude));
-        System.out.println(url);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
         BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
@@ -51,6 +64,7 @@ public class WeatherAPI {
             response.append(inputLine);
         }
         in.close();
+        System.out.println("Response for " + infoType + ": " + response);
         return response.toString();
     }
 
@@ -80,19 +94,25 @@ public class WeatherAPI {
     }
 
     private static void parseJSON() {
-        /* Find real time temperature (in Celsius) and wind speed (in mph) */
+        if (forecastTemperatureArray == null) {
+            forecastTemperatureArray = new ArrayList<>();
+        } else {
+            forecastTemperatureArray.clear();
+        }
+
+        /* Extract real-time temperature and wind speed */
         ArrayList<String> tempList = extractVals(realtimeJSON, "temperature");
         ArrayList<String> windList = extractVals(realtimeJSON, "windSpeed");
         temperature = Double.parseDouble(tempList.get(0));
         windSpeed = Double.parseDouble(windList.get(0));
 
-        /* Find forecast temps over a week (in Celsius) */
-        ArrayList<String> forecastTemps = extractVals(forecastJSON, "temperatureMax");
-        for(int i = 0; i < forecastTemps.size(); i++) {
+        /* Extract forecast temperatures */
+        ArrayList<String> forecastTemps = extractVals(forecastJSON, "temperature");
+        for(int i = 0; i < 10; i++) {
             forecastTemperatureArray.add(Double.parseDouble(forecastTemps.get(i)));
         }
 
-        /* Find real time wave height (in meters)*/
+        /* Extract wave height */
         ArrayList<String> waveList = extractVals(waveJSON, "wave_height");
         waveHeight = Double.parseDouble(waveList.get(0));
     }
@@ -103,27 +123,8 @@ public class WeatherAPI {
         Pattern pattern = Pattern.compile(tempRegex);
         Matcher matcher = pattern.matcher(jsonText);
         while(matcher.find()) {
-            allMatches.add(matcher.group(0));
+            allMatches.add(matcher.group(1));
         }
         return allMatches;
-    }
-
-    // Methods to obtain temp (Celsius), wind speed (mph),
-    // forecast temps (Celsius), and wave height (meters)
-
-    public static double getTemperature() {
-        return temperature;
-    }
-
-    public static double getWindSpeed() {
-        return windSpeed;
-    }
-
-    public static ArrayList<Double> getForecastTempArray() {
-        return forecastTemperatureArray;
-    }
-
-    public static double getWaveHeight() {
-        return waveHeight;
     }
 }
