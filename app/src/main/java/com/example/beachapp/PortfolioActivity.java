@@ -81,8 +81,7 @@ public class PortfolioActivity extends AppCompatActivity {
 
         });
         buttonGoBackToBeach.setOnClickListener(v -> {
-            Intent backIntent = new Intent(PortfolioActivity.this, DisplayBeachActivity.class);
-            backIntent.putExtra("beachID", beachID);
+            Intent backIntent = new Intent(PortfolioActivity.this, MapsActivity.class);
             backIntent.putExtra("userID", userID);
             startActivity(backIntent);
         });

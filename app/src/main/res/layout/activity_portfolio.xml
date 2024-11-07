@@ -79,7 +79,7 @@
             android:id="@+id/buttonGoBackToBeach"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Go back to Beach"
+            android:text="Go back to Beach Map"
             android:layout_marginTop="24dp"
             android:textSize="16sp"/>
     </LinearLayout>

@@ -42,8 +42,8 @@ public class DisplayBeachActivity extends AppCompatActivity implements WeatherAP
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_beach);
-        imageViewBeachPhoto = findViewById(R.id.imageViewBeachPhoto);
-        textViewBeachName = findViewById(R.id.textViewBeachName);
+        imageViewBeachPhoto= findViewById(R.id.imageViewBeachPhoto);
+        textViewBeachName= findViewById(R.id.textViewBeachName);
         textViewAccessHours = findViewById(R.id.textViewAccessHours);
         textViewWeatherTemperature = findViewById(R.id.weatherTemperature);
         textViewWeatherWindSpeed = findViewById(R.id.weatherWindSpeed);
