@@ -28,17 +28,18 @@ public class RegisterActivity extends AppCompatActivity {
     private String in_password;
 
     private Button buttom;
-
     private EditText edtUsername;
     private EditText edtEmail;
     private EditText edtPassword;
+    public boolean validateCredentials(String email, String password) {
+        return email != null && email.contains("@") && password != null && password.length() >= 6;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("users");
-
         edtUsername = findViewById(R.id.editTextUsername);
         edtEmail    = findViewById(R.id.editTextEmail);
         edtPassword = findViewById(R.id.editTextPassword);
@@ -59,6 +60,10 @@ public class RegisterActivity extends AppCompatActivity {
         }
         if(in_password.isEmpty()){
             Toast.makeText(getApplicationContext(), "Please Enter Password", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(!validateCredentials(in_email, in_password)){
+            Toast.makeText(getApplicationContext(), "please enter correct email format and password length > 6", Toast.LENGTH_SHORT).show();
             return;
         }
         else{

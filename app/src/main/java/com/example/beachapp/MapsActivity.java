@@ -171,7 +171,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
                 if (selectedMarker != null && selectedLocation != null) {
                     moveCameraToMarker(selectedMarker, selectedLocation, title);
-                    Toast.makeText(MapsActivity.this, "BeachID: " + selectedBeachID, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(MapsActivity.this, "BeachID: " + selectedBeachID, Toast.LENGTH_SHORT).show();
                 }
             }
 
