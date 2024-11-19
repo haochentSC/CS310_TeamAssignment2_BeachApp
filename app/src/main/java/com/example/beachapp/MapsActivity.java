@@ -2,6 +2,7 @@ package com.example.beachapp;
 
 import androidx.fragment.app.FragmentActivity;
 
+
 import android.content.Intent;
 import android.os.Bundle;
 
