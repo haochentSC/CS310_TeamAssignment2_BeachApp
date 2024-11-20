@@ -43,34 +43,28 @@ android {
 }
 
 dependencies {
-    // Core libraries
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
 
-    // Firebase dependencies
     implementation(libs.firebase.database)
     implementation(libs.firebase.auth)
 
-    // Google Play services (Maps and Location)
     implementation("com.google.android.gms:play-services-maps:17.0.1")
     implementation("com.google.android.gms:play-services-location:17.0.0")
 
-    // Material Design components (ensure version consistency)
     implementation("com.google.android.material:material:1.2.0")
+    implementation(libs.espresso.contrib)
 
-    // Testing libraries
-    testImplementation(libs.junit)
+    testImplementation("junit:junit:4.13.2")
     testImplementation("org.robolectric:robolectric:4.10")
     testImplementation("androidx.test:core:1.5.0")
-    androidTestImplementation(libs.ext.junit)
-    androidTestImplementation(libs.espresso.core)
+
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-
+    androidTestImplementation("androidx.test.uiautomator:uiautomator:2.2.0")
+    androidTestImplementation("org.hamcrest:hamcrest:2.2")
 }
-
-
