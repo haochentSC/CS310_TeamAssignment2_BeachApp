@@ -30,7 +30,7 @@ public class PortfolioActivity extends AppCompatActivity {
     private LinearLayout linearLayoutReviews;
     private DatabaseReference usersRef;
     private DatabaseReference reviewsRef;
-    private List<Review> userReviewList;
+    public List<Review> userReviewList;
     private String userID;
     private String beachID;
     private DatabaseReference beachesRef;

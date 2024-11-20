@@ -35,7 +35,6 @@ public class LoginActivityTest {
 
     @After
     public void tearDown() {
-
         Intents.release();
     }
 
