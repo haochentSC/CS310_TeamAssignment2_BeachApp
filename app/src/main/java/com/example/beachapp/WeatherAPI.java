@@ -15,8 +15,8 @@ import java.util.regex.Pattern;
 /*       double temp = WeatherAPI.getTemperature()              */
 
 public class WeatherAPI {
-    //private final static String API_KEY = "jXC2DReCT7GZAZCmebno6qGLsgCRd1EK";
-    private final static String API_KEY = "EQ2Mscv6d31ynkew7peprkmoTegJ5fjW";
+    private final static String API_KEY = "jXC2DReCT7GZAZCmebno6qGLsgCRd1EK";
+   // private final static String API_KEY = "EQ2Mscv6d31ynkew7peprkmoTegJ5fjW";
     private static String realtimeJSON;
     private static String forecastJSON;
     private static String waveJSON;
@@ -36,7 +36,7 @@ public class WeatherAPI {
                 realtimeJSON = WeatherAPI.fetchWeatherHelper("realtime", latitude, longitude);
                 forecastJSON = WeatherAPI.fetchWeatherHelper("forecast", latitude, longitude);
                 waveJSON = WeatherAPI.fetchWeatherHelper("marine", latitude, longitude);
-                parseJSON();
+                parseJSON(realtimeJSON, forecastJSON, waveJSON);
 
                 // Run callback on the main UI thread to update the UI
                 if (weatherCallback != null) {
@@ -66,23 +66,33 @@ public class WeatherAPI {
         return response.toString();
     }
 
-    private static String constructURL(String infoType, double latitude, double longitude) {
+    protected static String constructURL(String infoType, double latitude, double longitude) throws IllegalArgumentException {
         String weatherBase = "https://api.tomorrow.io/v4/weather/";
         String waveBase = "https://marine-api.open-meteo.com/v1/";
         String urlBase;
+
         if(infoType.equals("marine")) {
             urlBase = waveBase;
-        }
-        else {
+        } else if (infoType.equals("realtime") || infoType.equals("forecast")) {
             urlBase = weatherBase;
+        } else {
+            throw new IllegalArgumentException("Invalid infoType: " + infoType);
         }
+
+        if(latitude < -90 || latitude > 90) {
+            throw new IllegalArgumentException("Invalid latitude: " + latitude);
+        }
+        if(longitude < -180 || longitude > 180) {
+            throw new IllegalArgumentException("Invalid longitude: " + longitude);
+        }
+
         String urlParams = infoType;
         if(infoType.equals("marine")) {
             urlParams += "?latitude=" + latitude + "&longitude=" + longitude + "&current=wave_height";
         }
         else {
             urlParams += "?location=" + latitude + ", " + longitude;
-            if(infoType.equals("forecast")) {
+            if (infoType.equals("forecast")) {
                 // grab every hour change
                 urlParams += "&timesteps=1h";
             }
@@ -91,33 +101,37 @@ public class WeatherAPI {
         return urlBase + urlParams;
     }
 
-    private static void parseJSON() {
-        if (forecastTemperatureArray == null) {
-            forecastTemperatureArray = new ArrayList<>();
-        } else {
-            forecastTemperatureArray.clear();
+    public static void parseJSON(String realtimeInput, String forecastInput, String waveInput) {
+        try {
+            if (forecastTemperatureArray == null) {
+                forecastTemperatureArray = new ArrayList<>();
+            } else {
+                forecastTemperatureArray.clear();
+            }
+
+            /* Extract real-time temperature and wind speed */
+            ArrayList<String> tempList = extractVals(realtimeInput, "temperature");
+            ArrayList<String> windList = extractVals(realtimeInput, "windSpeed");
+            temperature = Double.parseDouble(tempList.get(0));
+            windSpeed = Double.parseDouble(windList.get(0));
+
+            /* Extract forecast temperatures */
+            ArrayList<String> forecastTemps = extractVals(forecastInput, "temperature");
+            for(int i = 0; i < 10; i++) {
+                forecastTemperatureArray.add(Double.parseDouble(forecastTemps.get(i)));
+            }
+
+            /* Extract wave height */
+            ArrayList<String> waveList = extractVals(waveInput, "wave_height");
+            waveHeight = Double.parseDouble(waveList.get(0));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        /* Extract real-time temperature and wind speed */
-        ArrayList<String> tempList = extractVals(realtimeJSON, "temperature");
-        ArrayList<String> windList = extractVals(realtimeJSON, "windSpeed");
-        temperature = Double.parseDouble(tempList.get(0));
-        windSpeed = Double.parseDouble(windList.get(0));
-
-        /* Extract forecast temperatures */
-        ArrayList<String> forecastTemps = extractVals(forecastJSON, "temperature");
-        for(int i = 0; i < 10; i++) {
-            forecastTemperatureArray.add(Double.parseDouble(forecastTemps.get(i)));
-        }
-
-        /* Extract wave height */
-        ArrayList<String> waveList = extractVals(waveJSON, "wave_height");
-        waveHeight = Double.parseDouble(waveList.get(0));
     }
 
-    private static ArrayList<String> extractVals(String jsonText, String parameter) {
+    public static ArrayList<String> extractVals(String jsonText, String parameter) {
         ArrayList<String> allMatches = new ArrayList<>();
-        String tempRegex = "\"" + parameter + "\":(\\d+(\\.\\d+)?)";
+        String tempRegex = "\"" + parameter + "\":\\s*(-?\\d+(\\.\\d+)?)";
         Pattern pattern = Pattern.compile(tempRegex);
         Matcher matcher = pattern.matcher(jsonText);
         while(matcher.find()) {
