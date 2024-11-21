@@ -1,7 +1,5 @@
 package com.example.beachapp;
 
-import com.google.firebase.database.ValueEventListener;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -17,7 +15,8 @@ import java.util.regex.Pattern;
 /*       double temp = WeatherAPI.getTemperature()              */
 
 public class WeatherAPI {
-    private final static String API_KEY = "jXC2DReCT7GZAZCmebno6qGLsgCRd1EK";
+    //private final static String API_KEY = "jXC2DReCT7GZAZCmebno6qGLsgCRd1EK";
+    private final static String API_KEY = "EQ2Mscv6d31ynkew7peprkmoTegJ5fjW";
     private static String realtimeJSON;
     private static String forecastJSON;
     private static String waveJSON;
