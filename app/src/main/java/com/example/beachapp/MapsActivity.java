@@ -26,13 +26,13 @@ import android.widget.Toast;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    private GoogleMap mMap;
+    public GoogleMap mMap;
     private UiSettings mUiSettings;
     private ActivityMapsBinding binding;
     private Marker SM;
     private Marker MB;
     private Marker AB;
-    private Marker HB;
+    public Marker HB;
     private Marker NB;
 
     class CustomInfoWindowAdapter implements InfoWindowAdapter {
@@ -94,6 +94,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mUiSettings = mMap.getUiSettings();
         mUiSettings.setZoomControlsEnabled(true);
 
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(33.8, -118.19), 9.6f));
+
         // Initialize the custom info window adapter
         mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
 
@@ -114,8 +116,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         HB.setTag("beach004");
         NB = mMap.addMarker(new MarkerOptions().position(newport).title("Newport Beach"));
         NB.setTag("beach005");
-
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(33.8, -118.19), 9.6f));
 
 
         Spinner markerSpinner = findViewById(R.id.markerSpinner);
