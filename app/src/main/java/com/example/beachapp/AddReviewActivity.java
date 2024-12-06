@@ -6,12 +6,17 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.Toast;
+
+import java.util.Collections;
 
 public class AddReviewActivity extends AppCompatActivity {
     private EditText editTextReviewText;
@@ -22,6 +27,18 @@ public class AddReviewActivity extends AppCompatActivity {
     private DatabaseReference beachRef;
     private String beachID=null;
     private String userID=null;
+    private Button buttonAddPhoto;
+    private ImageView imageViewSelectedPhoto;
+
+    private final String[] photoChoices = {
+            "alamitosbeach",
+            "huntingtonbeach",
+            "manhattanbeach",
+            "santamonica",
+            "newportbeach"
+    };
+    private String chosenPhotoName = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +46,10 @@ public class AddReviewActivity extends AppCompatActivity {
         editTextReviewText = findViewById(R.id.editTextReviewText);
         ratingBar = findViewById(R.id.ratingBar);
         buttonSubmitReview = findViewById(R.id.buttonSubmitReview);
+
+        buttonAddPhoto = findViewById(R.id.buttonAddPhoto);
+        imageViewSelectedPhoto = findViewById(R.id.imageViewSelectedPhoto);
+
         beachID = getIntent().getStringExtra("beachID");
         userID = getIntent().getStringExtra("userID");
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -42,8 +63,34 @@ public class AddReviewActivity extends AppCompatActivity {
         buttonSubmitReview.setOnClickListener(v -> {
             pushReview();
         });
+
+        buttonAddPhoto.setOnClickListener(v -> {
+            showPhotoSelectionDialog();
+        });
     }
-    private void pushReview(){
+
+    private void showPhotoSelectionDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Choose a Photo");
+
+        builder.setItems(new CharSequence[]{
+                "AlamitosBeach", "HuntingtonBeach", "ManhattanBeach", "SantaMonica", "NewportBeach"
+        }, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                chosenPhotoName = photoChoices[which];
+
+                int resId = getResources().getIdentifier(chosenPhotoName, "drawable", getPackageName());
+                imageViewSelectedPhoto.setImageResource(resId);
+                imageViewSelectedPhoto.setVisibility(ImageView.VISIBLE);
+            }
+        });
+        builder.setNegativeButton("Cancel", null);
+        builder.show();
+    }
+
+
+    private void pushReview() {
         String reviewText = editTextReviewText.getText().toString();
         int rating = (int) ratingBar.getRating();
         if (rating == 0) {
@@ -55,7 +102,12 @@ public class AddReviewActivity extends AppCompatActivity {
             return;
         }
         String reviewID = reviewsRef.push().getKey();
-        Review review = new Review(reviewID, userID, beachID, rating, reviewText, null);
+        Review review;
+        if (chosenPhotoName != null) {
+            review = new Review(reviewID, userID, beachID, rating, reviewText, Collections.singletonList(chosenPhotoName));
+        } else {
+            review = new Review(reviewID, userID, beachID, rating, reviewText, null);
+        }
         reviewsRef.child(reviewID).setValue(review)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -66,6 +118,8 @@ public class AddReviewActivity extends AppCompatActivity {
                     }
                 });
     }
+
+
     private void updateBeachRating(int newRating){
         beachRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {

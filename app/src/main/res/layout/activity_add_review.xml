@@ -26,6 +26,19 @@
             android:gravity="top"
             android:inputType="textMultiLine"
             android:layout_marginTop="16dp" />
+        <Button
+            android:id="@+id/buttonAddPhoto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add Photo"
+            android:layout_marginTop="16dp" />
+        <ImageView
+            android:id="@+id/imageViewSelectedPhoto"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:layout_marginTop="16dp"
+            android:visibility="gone"/>
 
         <Button
             android:id="@+id/buttonSubmitReview"

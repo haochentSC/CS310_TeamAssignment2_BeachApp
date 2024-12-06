@@ -2,12 +2,13 @@ package com.example.beachapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -39,6 +40,8 @@ public class PortfolioActivity extends AppCompatActivity {
     private EditText editTextReviewNumber;
     private Button buttonDeleteReview;
     private Button buttonGoBackToBeach;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +65,7 @@ public class PortfolioActivity extends AppCompatActivity {
         buttonDeleteReview = findViewById(R.id.buttonDeleteReview);
         beachNamesIDPair = new HashMap<>();
         buttonGoBackToBeach = findViewById(R.id.buttonGoBackToBeach);
+        LinearLayout linearLayoutContainer = findViewById(R.id.linearLayoutContainer);
         fetchUserData();
         fetchUserReviews();
         buttonDeleteReview.setOnClickListener(v -> {
@@ -181,6 +185,7 @@ public class PortfolioActivity extends AppCompatActivity {
         }
 
     }
+    /*
     public void displayUserReviews(){
         String allReviews="";
         for(int i=0; i<userReviewList.size(); i++){
@@ -193,7 +198,8 @@ public class PortfolioActivity extends AppCompatActivity {
             allReviews += "------------------------------\n";
         }
         textViewReviews.setText(allReviews);
-    }
+    }*/
+
     public void updateBeachRatingAfterDeletion(Review delReview){
         DatabaseReference del_beachRef = beachesRef.child(delReview.getBeachID());
         del_beachRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -219,6 +225,76 @@ public class PortfolioActivity extends AppCompatActivity {
                 Toast.makeText(PortfolioActivity.this, "Failed to update beach rating: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public void displayUserReviews(){
+        LinearLayout linearLayoutContainer = findViewById(R.id.linearLayoutContainer);
+
+        textViewReviews.setText("");
+        textViewReviews.setVisibility(View.GONE);
+
+        int count = linearLayoutContainer.getChildCount();
+
+        int insertIndex = -1;
+        for (int i = 0; i < count; i++) {
+            if (linearLayoutContainer.getChildAt(i) == textViewReviews) {
+                insertIndex = i;
+                break;
+            }
+        }
+
+        // If no reviews, show the message in textViewReviews as done above
+        if (userReviewList.isEmpty()) {
+            textViewReviews.setVisibility(View.VISIBLE);
+            textViewReviews.setText("You haven't submitted any reviews yet.");
+            return;
+        }
+
+        textViewReviews.setText("");
+        textViewReviews.setVisibility(View.GONE);
+
+        while (linearLayoutContainer.getChildCount() > (insertIndex + 1)) {
+            linearLayoutContainer.removeViewAt(insertIndex + 1);
+        }
+
+        for (int i=0; i<userReviewList.size(); i++){
+            Review review = userReviewList.get(i);
+            String beachName = beachNamesIDPair.get(review.getBeachID());
+
+            TextView reviewInfo = new TextView(this);
+            StringBuilder sb = new StringBuilder();
+            sb.append("Review ").append(i+1).append("\n");
+            sb.append("Beach: ").append(beachName).append("\n");
+            sb.append("Rating: ").append(review.getRating()).append(" ★\n");
+            sb.append("Comment: ").append(review.getText()).append("\n");
+            sb.append("------------------------------\n");
+            reviewInfo.setText(sb.toString());
+
+            linearLayoutContainer.addView(reviewInfo, insertIndex + 1);
+            insertIndex++;
+
+            if (review.getPictureUrls() != null && !review.getPictureUrls().isEmpty()) {
+                for (String photoName : review.getPictureUrls()) {
+                    // Convert photoName to resource ID
+                    int resId = getResources().getIdentifier(photoName, "drawable", getPackageName());
+                    if (resId != 0) {
+                        ImageView iv = new ImageView(this);
+                        iv.setAdjustViewBounds(true);
+                        iv.setMaxWidth(200);
+                        iv.setMaxHeight(200);
+                        iv.setImageResource(resId);
+                        // Add some margin maybe
+                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.WRAP_CONTENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT);
+                        lp.setMargins(0, 8, 0, 8);
+                        iv.setLayoutParams(lp);
+                        linearLayoutContainer.addView(iv, insertIndex + 1);
+                        insertIndex++;
+                    }
+                }
+            }
+        }
     }
 
 }
