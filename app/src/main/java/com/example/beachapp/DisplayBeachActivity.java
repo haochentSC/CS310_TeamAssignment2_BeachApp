@@ -2,6 +2,7 @@ package com.example.beachapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TableLayout;
@@ -19,7 +20,19 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
 public class DisplayBeachActivity extends AppCompatActivity implements WeatherAPI.WeatherCallback {
@@ -60,6 +73,8 @@ public class DisplayBeachActivity extends AppCompatActivity implements WeatherAP
         databaseReference_beach = firebaseDatabase.getReference("beaches");
 
         fetchBeachData();
+
+        displayTopTwoActivities(beachID);
 
         buttonRating.setOnClickListener(v -> {
             Intent reviewIntent = new Intent(DisplayBeachActivity.this, ReviewActivity.class);
@@ -110,6 +125,58 @@ public class DisplayBeachActivity extends AppCompatActivity implements WeatherAP
         for (int i = 0; i < 8; i++) {
             TextView cell = (TextView)row.getChildAt(i);
             cell.setText(String.valueOf(forecastTemps.get(i)));
+        }
+    }
+
+    private void displayTopTwoActivities(String beachName) {
+        try {
+            JSONObject beachActivitiesJson = loadBeachActivitiesJson();
+            if (beachActivitiesJson != null) {
+                JSONObject activities = beachActivitiesJson.getJSONObject(beachName);
+
+                Map<String, Integer> activityMap = new HashMap<>();
+                Iterator<String> keys = activities.keys();
+                while (keys.hasNext()) {
+                    String key = keys.next();
+                    activityMap.put(key, activities.getInt(key));
+                }
+
+                List<Map.Entry<String, Integer>> sortedActivities = new ArrayList<>(activityMap.entrySet());
+                sortedActivities.sort((entry1, entry2) -> Integer.compare(entry2.getValue(), entry1.getValue()));
+
+                String topActivity1 = sortedActivities.size() > 0 ? sortedActivities.get(0).getKey() : "N/A";
+                String topActivity2 = sortedActivities.size() > 1 ? sortedActivities.get(1).getKey() : "N/A";
+
+                // Display them
+                TextView topActivityTextView = findViewById(R.id.topActivitiesTextView); // Assuming you have this TextView
+                StringBuilder topActivitiesText = new StringBuilder();
+                topActivitiesText.append("Top two activities:\n");
+                topActivitiesText.append("1. ").append(topActivity1).append(": ").append(sortedActivities.size() > 0 ? sortedActivities.get(0).getValue() : 0).append("\n");
+
+                topActivitiesText.append("2. ").append(topActivity2).append(": ").append(sortedActivities.size() > 1 ? sortedActivities.get(1).getValue() : 0);
+
+                topActivityTextView.setText(topActivitiesText.toString());
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private JSONObject loadBeachActivitiesJson() {
+        File file = new File(getFilesDir(), "activity_tag.json");
+        try {
+            FileInputStream fileInputStream = new FileInputStream(file);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(fileInputStream));
+            StringBuilder stringBuilder = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line);
+            }
+            String jsonContent = stringBuilder.toString();
+            return new JSONObject(jsonContent);
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }

@@ -1,0 +1,37 @@
+{
+  "SantaMonica": {
+    "swimming": 1,
+    "biking": 0,
+    "surfing": 2,
+    "volleyball": 0,
+    "snorkeling": 0
+  },
+  "Manhattan": {
+    "swimming": 2,
+    "biking": 4,
+    "surfing": 1,
+    "volleyball": 5,
+    "snorkeling": 0
+  },
+  "Alamitos": {
+    "swimming": 0,
+    "biking": 2,
+    "surfing": 4,
+    "volleyball": 4,
+    "snorkeling": 3
+  },
+  "Huntington": {
+    "swimming": 2,
+    "biking": 2,
+    "surfing": 2,
+    "volleyball": 8,
+    "snorkeling": 8
+  },
+  "Newport": {
+    "swimming": 8,
+    "biking": 3,
+    "surfing": 0,
+    "volleyball": 0,
+    "snorkeling": 1
+  }
+}

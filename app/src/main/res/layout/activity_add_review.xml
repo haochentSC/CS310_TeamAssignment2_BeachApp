@@ -40,6 +40,36 @@
             android:layout_marginTop="16dp"
             android:visibility="gone"/>
 
+        <CheckBox
+            android:id="@+id/swimmingCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Swimming" />
+
+        <CheckBox
+            android:id="@+id/bikingCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Biking" />
+
+        <CheckBox
+            android:id="@+id/surfingCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Surfing" />
+
+        <CheckBox
+            android:id="@+id/volleyballCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Volleyball" />
+
+        <CheckBox
+            android:id="@+id/snorkelingCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Snorkeling" />
+
         <Button
             android:id="@+id/buttonSubmitReview"
             android:layout_width="match_parent"

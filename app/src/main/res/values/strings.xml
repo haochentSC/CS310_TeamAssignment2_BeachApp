@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">BeachApp</string>
     <string name="title_activity_maps">MapsActivity</string>
+    <string-array name="tag_options">
+        <item>Swimming</item>
+        <item>Biking</item>
+        <item>Surfing</item>
+        <item>Snorkeling</item>
+        <item>Volleyball</item>
+    </string-array>
+    <string name="select_activity_tags">Select Activity Tags</string>
 </resources>
