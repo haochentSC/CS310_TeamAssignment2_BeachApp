@@ -121,10 +121,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Spinner markerSpinner = findViewById(R.id.markerSpinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, new String[] {
                 "All Beaches",
-                "Tag 1",
-                "Tag 2",
-                "Tag 3",
-                "Tag 4",
+                "Swimming",
+                "Surfing",
+                "Biking",
+                "Volleyball",
+                "Snorkeling"
         });
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         markerSpinner.setAdapter(adapter);
@@ -134,7 +135,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 switch (position) {
-                    case 0: // Santa Monica Beach
+                    case 0: // All Beaches
                         mMap.clear();
                         SM = mMap.addMarker(new MarkerOptions().position(santamonica).title("Santa Monica Beach"));
                         SM.setTag("beach001");
@@ -148,36 +149,50 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         NB.setTag("beach005");
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(33.8, -118.19), 9.6f));
                         break;
-                    case 1: // Manhattan Beach
+                    case 1: // Swimming
                         mMap.clear();
-                        AB = mMap.addMarker(new MarkerOptions().position(alamitos).title("Alamitos Beach"));
-                        AB.setTag("beach003");
+                        SM = mMap.addMarker(new MarkerOptions().position(santamonica).title("Santa Monica Beach"));
+                        SM.setTag("beach001");
+                        MB = mMap.addMarker(new MarkerOptions().position(manhattan).title("Manhattan Beach"));
+                        MB.setTag("beach002");
                         HB =mMap.addMarker(new MarkerOptions().position(huntington).title("Huntington Beach"));
                         HB.setTag("beach004");
                         NB = mMap.addMarker(new MarkerOptions().position(newport).title("Newport Beach"));
                         NB.setTag("beach005");
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(33.8, -118.19), 9.6f));
                         break;
-                    case 2: // Alamitos Beach
+                    case 2: // Surfing
                         mMap.clear();
                         SM = mMap.addMarker(new MarkerOptions().position(santamonica).title("Santa Monica Beach"));
                         SM.setTag("beach001");
                         MB = mMap.addMarker(new MarkerOptions().position(manhattan).title("Manhattan Beach"));
                         MB.setTag("beach002");
-                        AB = mMap.addMarker(new MarkerOptions().position(alamitos).title("Alamitos Beach"));
-                        AB.setTag("beach003");
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(33.8, -118.19), 9.6f));
-                        break;
-                    case 3: // Huntington Beach
-                        mMap.clear();
-                        AB = mMap.addMarker(new MarkerOptions().position(alamitos).title("Alamitos Beach"));
-                        AB.setTag("beach003");
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(33.8, -118.19), 9.6f));
-                        break;
-                    case 4: // Newport Beach
-                        mMap.clear();
                         NB = mMap.addMarker(new MarkerOptions().position(newport).title("Newport Beach"));
                         NB.setTag("beach005");
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(33.8, -118.19), 9.6f));
+                        break;
+                    case 3: // Biking
+                        mMap.clear();
+                        AB = mMap.addMarker(new MarkerOptions().position(alamitos).title("Alamitos Beach"));
+                        AB.setTag("beach003");
+                        NB = mMap.addMarker(new MarkerOptions().position(newport).title("Newport Beach"));
+                        NB.setTag("beach005");
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(33.8, -118.19), 9.6f));
+                        break;
+                    case 4: // Volleyball
+                        mMap.clear();
+                        SM = mMap.addMarker(new MarkerOptions().position(santamonica).title("Santa Monica Beach"));
+                        SM.setTag("beach001");
+                        NB = mMap.addMarker(new MarkerOptions().position(newport).title("Newport Beach"));
+                        NB.setTag("beach005");
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(33.8, -118.19), 9.6f));
+                        break;
+                    case 5: // Snorkeling
+                        mMap.clear();
+                        MB = mMap.addMarker(new MarkerOptions().position(manhattan).title("Manhattan Beach"));
+                        MB.setTag("beach002");
+                        HB =mMap.addMarker(new MarkerOptions().position(huntington).title("Huntington Beach"));
+                        HB.setTag("beach004");
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(33.8, -118.19), 9.6f));
                         break;
                 }
