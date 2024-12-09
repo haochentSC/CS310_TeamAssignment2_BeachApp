@@ -16,7 +16,9 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class AddReviewActivity extends AppCompatActivity {
     private EditText editTextReviewText;
@@ -29,6 +31,9 @@ public class AddReviewActivity extends AppCompatActivity {
     private String userID=null;
     private Button buttonAddPhoto;
     private ImageView imageViewSelectedPhoto;
+    private String reviewID = null;
+    private String existingPictureUrl = null;
+    private boolean updateOP=false;
 
     private final String[] photoChoices = {
             "alamitosbeach",
@@ -50,8 +55,12 @@ public class AddReviewActivity extends AppCompatActivity {
         buttonAddPhoto = findViewById(R.id.buttonAddPhoto);
         imageViewSelectedPhoto = findViewById(R.id.imageViewSelectedPhoto);
 
-        beachID = getIntent().getStringExtra("beachID");
-        userID = getIntent().getStringExtra("userID");
+        Intent intent = getIntent();
+        beachID = intent.getStringExtra("beachID");
+        userID = intent.getStringExtra("userID");
+        reviewID = intent.getStringExtra("reviewID");
+        existingPictureUrl = intent.getStringExtra("pictureUrl");
+
         firebaseDatabase = FirebaseDatabase.getInstance();
         reviewsRef = firebaseDatabase.getReference("reviews").child(beachID);
         beachRef = firebaseDatabase.getReference("beaches").child(beachID);
@@ -59,6 +68,23 @@ public class AddReviewActivity extends AppCompatActivity {
             Toast.makeText(this, "Error: Missing beachID or userID", Toast.LENGTH_LONG).show();
             finish();
             return;
+        }
+        if (reviewID != null) {
+            updateOP=true;
+            String existingReviewText = intent.getStringExtra("reviewText");
+            int existingRating = intent.getIntExtra("rating", 0);
+            String pictureUrl = intent.getStringExtra("pictureUrl");
+
+            editTextReviewText.setText(existingReviewText);
+            ratingBar.setRating(existingRating);
+            if (pictureUrl != null && !pictureUrl.isEmpty()) {
+                chosenPhotoName = pictureUrl; // Assuming pictureUrl is the resource name
+                int resId = getResources().getIdentifier(chosenPhotoName, "drawable", getPackageName());
+                if (resId != 0) {
+                    imageViewSelectedPhoto.setImageResource(resId);
+                    imageViewSelectedPhoto.setVisibility(ImageView.VISIBLE);
+                }
+            }
         }
         buttonSubmitReview.setOnClickListener(v -> {
             pushReview();
@@ -101,6 +127,7 @@ public class AddReviewActivity extends AppCompatActivity {
             Toast.makeText(this, "Please enter your review.", Toast.LENGTH_SHORT).show();
             return;
         }
+
         String reviewID = reviewsRef.push().getKey();
         Review review;
         if (chosenPhotoName != null) {
@@ -132,11 +159,20 @@ public class AddReviewActivity extends AppCompatActivity {
                     beach.setTotalRatings(totalRatings + 1);
                     beachRef.setValue(beach).addOnCompleteListener(updateTask -> {
                                 if (updateTask.isSuccessful()) {
-                                    Intent intent = new Intent(AddReviewActivity.this, DisplayBeachActivity.class);
-                                    intent.putExtra("beachID", beachID);
-                                    intent.putExtra("userID", userID);
-                                    startActivity(intent);
-                                } else {
+                                    if(updateOP) {
+                                        Intent intent = new Intent(AddReviewActivity.this, PortfolioActivity.class);
+                                        intent.putExtra("beachID", beachID);
+                                        intent.putExtra("userID", userID);
+                                        startActivity(intent);
+                                    }
+                                    else{
+                                        Intent intent = new Intent(AddReviewActivity.this, DisplayBeachActivity.class);
+                                        intent.putExtra("beachID", beachID);
+                                        intent.putExtra("userID", userID);
+                                        startActivity(intent);
+                                    }
+                                }
+                                else {
                                     Toast.makeText(AddReviewActivity.this, "Failed to update beach rating: " + updateTask.getException().getMessage(), Toast.LENGTH_LONG).show();
                                 }
                             });
