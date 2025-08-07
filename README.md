@@ -30,6 +30,3 @@ The command requires network access to download the Gradle distribution.
 
 ## Documentation
 For a deeper exploration of the architecture, data model, and development workflow, see [DOCUMENTATION.md](DOCUMENTATION.md).
-
-## License
-This project is provided for educational purposes as part of CS310 team assignments.
