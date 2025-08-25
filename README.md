@@ -22,11 +22,7 @@ BeachApp is an Android application for discovering and reviewing beaches in Sout
 5. Log in with the test credentials `ss` / `ss` or register a new account.
 
 ## Testing
-Run the unit test suite from the command line:
-```bash
-sh gradlew test
-```
-The command requires network access to download the Gradle distribution.
+Run the unit and espresso test suite from the test folders. 
 
 ## Documentation
 For a deeper exploration of the architecture, data model, and development workflow, see [DOCUMENTATION.md](DOCUMENTATION.md).
